@@ -1,9 +1,11 @@
 import Router from "./Router.js";
+import Hyperledger from "./Hyperledger.js";
 
 export default class Server{
     express=null;
     port=null;
     router=null;
+    hyperledger=null;
 
     constructor(express,port) {
         this.express=express;
@@ -21,11 +23,23 @@ export default class Server{
 
 
         this.router=new Router(this.express)
+
         this.start();
+        this.hyperledger = new Hyperledger();
+        this.hyperledger.init().then(function () {
+            console.log('all good ');
+        }).catch((e)=>{
+            console.log("error", e);
+        });
+
+
 
 
 
     }
+
+
+
 
     start(){
         this.express.listen(this.port, () => {
