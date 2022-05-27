@@ -21,11 +21,11 @@ export default class Server{
 
     init(){
 
-
-        this.router=new Router(this.express)
+        this.hyperledger = new Hyperledger();
+        this.router=new Router(this.express,this.hyperledger)
 
         this.start();
-        this.hyperledger = new Hyperledger();
+
         this.hyperledger.init().then(function () {
             console.log('all good ');
         }).catch((e)=>{
