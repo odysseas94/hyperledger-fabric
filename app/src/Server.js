@@ -1,5 +1,6 @@
 import Router from "./Router.js";
 import Hyperledger from "./Hyperledger.js";
+import BodyParser from 'body-parser';
 
 export default class Server{
     express=null;
@@ -42,6 +43,11 @@ export default class Server{
 
 
     start(){
+
+        this.express.use( BodyParser.json() );       // to support JSON-encoded bodies
+        this.express.use(BodyParser.urlencoded({     // to support URL-encoded bodies
+            extended: true
+        }));
         this.express.listen(this.port, () => {
             console.log(`Running on port ${this.port}`)
         })

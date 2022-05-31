@@ -7,25 +7,41 @@ export default class Router {
     express = null;
 
 
-    constructor(express,hyperledger) {
+    constructor(express, hyperledger) {
         this.express = express;
         this.init();
-        this.hyperledger=hyperledger;
+        this.hyperledger = hyperledger;
 
 
     }
 
-    listen(url, callback=()=>{}) {
-        this.express.get(url, (req, res) => {
 
-            res.setHeader('Content-Type', 'application/json');
-            callback(req, res);
+    _callback(req, res, callback) {
+
+        res.setHeader('Content-Type', 'application/json');
+        callback(req, res);
+    }
+
+    listenGet(url, callback = () => {
+    }) {
+        this.express.get(url, (req, res) => {
+            this._callback(req, res, callback);
         })
 
     }
 
+    listenPost(url, callback = () => {
+    }) {
+
+        this.express.post(url, (req, res) => {
+            this._callback(req, res, callback);
+        })
+
+    }
+
+
     init() {
-        this.listen("/", (req, res) => {
+        this.listenGet("/", (req, res) => {
             res.send('API')
         })
 
@@ -37,48 +53,48 @@ export default class Router {
     }
 
 
+    listenAll() {
 
-    listenAll(){
+        this.listenPost("/"+routerGetAlLItems, (request, response) => {
 
-        this.listen("/all", (request, response) => {
-
-             this.hyperledger.getAllItems().then((result)=>{
-                 response.send(result);
-             }).catch((e)=>{
-                 response.send(JSON.stringify(e));
-             })
+            this.hyperledger.getAllItems().then((result) => {
+                response.send(result);
+            }).catch((e) => {
+                response.send(JSON.stringify(e));
+            })
 
         });
 
     }
 
-    listenSingleItems(){
-        this.listen("/single", (request, response) => {
-            this.hyperledger.getItemsById(request.query,request.query?.id).then((result)=>{
+    listenSingleItems() {
+        this.listenPost("/"+routerGetSingleItems, (request, response) => {
+            this.hyperledger.getItemsById(request.query, request.query?.id).then((result) => {
                 response.send(result);
-            }).catch((e)=>{
+            }).catch((e) => {
                 response.send(JSON.stringify(e));
             })
 
         });
     }
 
-    listenSaveItem(){
-        this.listen("/save", (request, response) => {
-            this.hyperledger.saveItem(request.query,request.query?.id).then((result)=>{
+    listenSaveItem() {
+        this.listenPost("/"+routerSaveItem, (request, response) => {
+            this.hyperledger.saveItem(request.query, request.query?.id).then((result) => {
                 response.send(result);
-            }).catch((e)=>{
+            }).catch((e) => {
                 response.send(JSON.stringify(e));
             })
 
         });
     }
 
-    listenCheckItemsById(){
-        this.listen("/check", (request, response) => {
-            this.hyperledger.checkItemsById(request.query,request.query?.id).then((result)=>{
+    listenCheckItemsById() {
+        this.listenPost("/"+routerGetCheckItem, (request, response) => {
+            console.log(request.body)
+            this.hyperledger.checkItemsById(request.query, request.query?.id).then((result) => {
                 response.send(result);
-            }).catch((e)=>{
+            }).catch((e) => {
                 response.send(JSON.stringify(e));
             })
 
@@ -86,11 +102,11 @@ export default class Router {
     }
 
 
-    listenDeleteSingle(){
-        this.listen("/delete", (request, response) => {
-            this.hyperledger.getDeleteItemsById(request.query,request.query?.id).then((result)=>{
+    listenDeleteSingle() {
+        this.listenPost("/delete", (request, response) => {
+            this.hyperledger.getDeleteItemsById(request.query, request.query?.id).then((result) => {
                 response.send(result);
-            }).catch((e)=>{
+            }).catch((e) => {
                 response.send(JSON.stringify(e));
             })
 
