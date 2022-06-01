@@ -9,7 +9,6 @@ export default class Router {
 
     constructor(express, hyperledger) {
         this.express = express;
-        this.init();
         this.hyperledger = hyperledger;
 
 
@@ -69,7 +68,8 @@ export default class Router {
 
     listenSingleItems() {
         this.listenPost("/"+routerGetSingleItems, (request, response) => {
-            this.hyperledger.getItemsById(request.query, request.query?.id).then((result) => {
+            let params = request.body;
+            this.hyperledger.getItemsById(params, params?.id).then((result) => {
                 response.send(result);
             }).catch((e) => {
                 response.send(JSON.stringify(e));
@@ -80,7 +80,9 @@ export default class Router {
 
     listenSaveItem() {
         this.listenPost("/"+routerSaveItem, (request, response) => {
-            this.hyperledger.saveItem(request.query, request.query?.id).then((result) => {
+            let params = request.body;
+
+            this.hyperledger.saveItem(params, params?.id).then((result) => {
                 response.send(result);
             }).catch((e) => {
                 response.send(JSON.stringify(e));
@@ -91,8 +93,8 @@ export default class Router {
 
     listenCheckItemsById() {
         this.listenPost("/"+routerGetCheckItem, (request, response) => {
-            console.log(request.body)
-            this.hyperledger.checkItemsById(request.query, request.query?.id).then((result) => {
+            let params = request.body;
+            this.hyperledger.checkItemsById(params, params?.id).then((result) => {
                 response.send(result);
             }).catch((e) => {
                 response.send(JSON.stringify(e));
@@ -104,7 +106,8 @@ export default class Router {
 
     listenDeleteSingle() {
         this.listenPost("/delete", (request, response) => {
-            this.hyperledger.getDeleteItemsById(request.query, request.query?.id).then((result) => {
+            let params = request.body;
+            this.hyperledger.getDeleteItemsById(params, params?.id).then((result) => {
                 response.send(result);
             }).catch((e) => {
                 response.send(JSON.stringify(e));

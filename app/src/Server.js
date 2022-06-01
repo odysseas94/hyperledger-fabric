@@ -1,6 +1,7 @@
 import Router from "./Router.js";
 import Hyperledger from "./Hyperledger.js";
 import BodyParser from 'body-parser';
+import express from "express";
 
 export default class Server{
     express=null;
@@ -10,6 +11,7 @@ export default class Server{
 
     constructor(express,port) {
         this.express=express;
+        this.app=express();
         this.port=port;
 
         this.init();
@@ -23,7 +25,7 @@ export default class Server{
     init(){
 
         this.hyperledger = new Hyperledger();
-        this.router=new Router(this.express,this.hyperledger)
+        this.router=new Router(this.app,this.hyperledger)
 
         this.start();
 
@@ -44,11 +46,15 @@ export default class Server{
 
     start(){
 
-        this.express.use( BodyParser.json() );       // to support JSON-encoded bodies
-        this.express.use(BodyParser.urlencoded({     // to support URL-encoded bodies
-            extended: true
-        }));
-        this.express.listen(this.port, () => {
+        this.app.use(
+            this.express.urlencoded({
+                extended: true,
+            })
+        );
+        this.app.use(this.express.json());
+
+        this.router.init();
+        this.app.listen(this.port, () => {
             console.log(`Running on port ${this.port}`)
         })
     }
