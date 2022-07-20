@@ -101,17 +101,18 @@ export default class Hyperledger {
     async saveItem(query) {
 
 
-        if (query.id && query.productId && query.productName && query.buyerId && query.buyerUsername && query.sellerId && query.sellerUsername && query.productAmount && query.productPrice && query.transactionIdDatabase && query.dateCreated) {
-            let item = await this.contract.submitTransaction('submitTransaction',
-                query.id , query.productId ,query.productName , query.buyerId , query.buyerUsername , query.sellerId , query.sellerUsername , query.productAmount , query.productPrice , query.transactionIdDatabase , query.dateCreated);
+        if (query.id && query.productId && query.productName && query.buyerId && query.buyerUsername && query.sellerId && query.sellerUsername && query.productAmount && query.productPrice && query.transactionType && query.transactionIdDatabase && query.dateCreated) {
+            let item = await this.contract.submitTransaction('CreateAsset',
+                query.id , query.productId ,query.productName , query.buyerId , query.buyerUsername , query.sellerId , query.sellerUsername , query.productAmount , query.productPrice , query.transactionType ,query.transactionIdDatabase , query.dateCreated);
 
             if(item){
                 return {success: item}
             }
             return {error: item}
         }
+        console.log("didnt save")
 
-        return {error: "Required id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionIdDatabase, dateCreated"}
+        return {error: "Required id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionType,transactionIdDatabase, dateCreated"}
 
     }
 

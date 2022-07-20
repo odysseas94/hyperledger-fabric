@@ -25,6 +25,7 @@ class AssetTransfer extends Contract {
                 SellerUsername: "testuser",
                 ProductAmount: 10,
                 ProductPrice: 100,
+                TransactionType: "Pending",
                 TransactionIdDatabase: 1,
                 DateCreated: "2022-05-03 09:51:19"
             },
@@ -38,6 +39,7 @@ class AssetTransfer extends Contract {
                 SellerUsername: "testuser",
                 ProductAmount: 10,
                 ProductPrice: 100,
+                TransactionType: "Pending",
                 TransactionIdDatabase: 2,
                 DateCreated: "2022-05-03 10:51:19"
             },
@@ -51,6 +53,7 @@ class AssetTransfer extends Contract {
                 SellerUsername: "testuser",
                 ProductAmount: 10,
                 ProductPrice: 100,
+                TransactionType: "Pending",
                 TransactionIdDatabase: 3,
                 DateCreated: "2022-05-03 11:51:19"
             },
@@ -67,7 +70,7 @@ class AssetTransfer extends Contract {
     }
 
     // CreateAsset issues a new asset to the world state with given details.
-    async CreateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionIdDatabase, dateCreated) {
+    async CreateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionType,transactionIdDatabase, dateCreated) {
         const exists = await this.AssetExists(ctx, id);
         if (exists) {
             throw new Error(`The asset ${id} already exists`);
@@ -82,8 +85,9 @@ class AssetTransfer extends Contract {
             BuyerUsername: buyerUsername,
             SellerId: sellerId,
             SellerUsername: sellerUsername,
-            ProductAmount: productName,
+            ProductAmount: productAmount,
             ProductPrice: productPrice,
+            TransactionType: transactionType,
             TransactionIdDatabase: transactionIdDatabase,
             DateCreated: dateCreated
         };
@@ -102,7 +106,7 @@ class AssetTransfer extends Contract {
     }
 
     // UpdateAsset updates an existing asset in the world state with provided parameters.
-    async UpdateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionIdDatabase, dateCreated) {
+    async UpdateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice,transactionType, transactionIdDatabase, dateCreated) {
         const exists = await this.AssetExists(ctx, id);
         if (!exists) {
             throw new Error(`The asset ${id} does not exist`);
@@ -118,7 +122,8 @@ class AssetTransfer extends Contract {
             SellerId: sellerId,
             SellerUsername: sellerUsername,
             ProductAmount: productName,
-            ProductPrice: productPrice,
+            ProductPrice: productAmount,
+            TransactionType:transactionType,
             TransactionIdDatabase: transactionIdDatabase,
             DateCreated: dateCreated
         };

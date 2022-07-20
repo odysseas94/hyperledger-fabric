@@ -6,15 +6,12 @@ const routerSaveItem = "save";
 export default class Router {
     express = null;
 
-
     constructor(express, hyperledger) {
         this.express = express;
         this.hyperledger = hyperledger;
 
 
     }
-
-
     _callback(req, res, callback) {
 
         res.setHeader('Content-Type', 'application/json');
