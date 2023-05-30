@@ -15,7 +15,7 @@ export default class Hyperledger {
     chaincodeName = 'basic';
     mspOrg1 = 'Org1MSP';
     walletPath = path.resolve(__dirname, 'assets', 'wallet');
-    org1UserId = 'adminUser';
+    org1UserId = 'admin';
     gateway = null;
     network = null;
     contract = null;
@@ -45,6 +45,7 @@ export default class Hyperledger {
         try {
             await this.initContract();
         } catch (e) {
+
             console.log(e);
         }
 
@@ -97,13 +98,12 @@ export default class Hyperledger {
 
     }
 
-
     async saveItem(query) {
 
 
-        if (query.id && query.productId && query.productName && query.buyerId && query.buyerUsername && query.sellerId && query.sellerUsername && query.productAmount && query.productPrice && query.transactionType && query.transactionIdDatabase && query.dateCreated) {
+        if (query.id && query.proofPointId && query.products && query.evidences && query.userId && query.username && query.submissionTypeId && query.createdAt) {
             let item = await this.contract.submitTransaction('CreateAsset',
-                query.id , query.productId ,query.productName , query.buyerId , query.buyerUsername , query.sellerId , query.sellerUsername , query.productAmount , query.productPrice , query.transactionType ,query.transactionIdDatabase , query.dateCreated);
+                query.id , query.proofPointId , query.products , query.evidences , query.userId , query.username , query.submissionTypeId , query.createdAt);
 
             if(item){
                 return {success: item}
@@ -112,7 +112,7 @@ export default class Hyperledger {
         }
         console.log("didnt save")
 
-        return {error: "Required id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionType,transactionIdDatabase, dateCreated"}
+        return {error: "Required     query.id , query.proofPointId , query.products , query.evidences , query.userId , query.username , query.submissionTypeId , query.createdAt)"}
 
     }
 

@@ -51,7 +51,7 @@ export default class Router {
 
     listenAll() {
 
-        this.listenPost("/"+routerGetAlLItems, (request, response) => {
+        this.listenGet("/"+routerGetAlLItems, (request, response) => {
 
             this.hyperledger.getAllItems().then((result) => {
                 response.send(result);

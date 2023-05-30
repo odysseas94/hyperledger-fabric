@@ -16,46 +16,35 @@ class AssetTransfer extends Contract {
     async InitLedger(ctx) {
         const assets = [
             {
-                ID: "Asset1",
-                ProductId: 1,
-                ProductName: "Book",
-                BuyerId: 1,
-                BuyerUsername: "odysseastsakai",
-                SellerId: 2,
-                SellerUsername: "testuser",
-                ProductAmount: 10,
-                ProductPrice: 100,
-                TransactionType: "Pending",
-                TransactionIdDatabase: 1,
-                DateCreated: "2022-05-03 09:51:19"
+                ID: "S:`asds`,P:112",
+                ProofPointId: 1,
+                Products: "[products]",
+                Evidences: "[products]",
+                UserId: 1,
+                Username: "producer",
+                SubmissionTypeId: 1,
+                CreatedAt: "2022-05-03 09:51:19",
+
             },
             {
-                ID: "Asset3",
-                ProductId: 2,
-                ProductName: "Bike",
-                BuyerId: 1,
-                BuyerUsername: "odysseastsakai",
-                SellerId: 2,
-                SellerUsername: "testuser",
-                ProductAmount: 10,
-                ProductPrice: 100,
-                TransactionType: "Pending",
-                TransactionIdDatabase: 2,
-                DateCreated: "2022-05-03 10:51:19"
+                ID: "S:2,P:112",
+                ProofPointId: 1,
+                Products: "[products2]",
+                Evidences: "[evidences]",
+                UserId: 1,
+                Username: "producer",
+                SubmissionTypeId: 1,
+                CreatedAt: "2022-05-03 09:51:19",
             },
             {
-                ID: "Asset2",
-                ProductId: 3,
-                ProductName: "PC",
-                BuyerId: 1,
-                BuyerUsername: "odysseastsakai",
-                SellerId: 2,
-                SellerUsername: "testuser",
-                ProductAmount: 10,
-                ProductPrice: 100,
-                TransactionType: "Pending",
-                TransactionIdDatabase: 3,
-                DateCreated: "2022-05-03 11:51:19"
+                ID: "S:3,P:112",
+                ProofPointId: 1,
+                Products: "[products]",
+                Evidences: "[evidences3]",
+                UserId: 1,
+                Username: "producer",
+                SubmissionTypeId: 1,
+                CreatedAt: "2022-05-03 09:51:19",
             },
         ];
 
@@ -70,26 +59,20 @@ class AssetTransfer extends Contract {
     }
 
     // CreateAsset issues a new asset to the world state with given details.
-    async CreateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice, transactionType,transactionIdDatabase, dateCreated) {
+    async CreateAsset(ctx, id,proofPointId, products, evidences, userId, username, submissionTypeId, createdAt) {
         const exists = await this.AssetExists(ctx, id);
         if (exists) {
             throw new Error(`The asset ${id} already exists`);
         }
-
-
         const asset = {
             ID: id,
-            ProductId: productId,
-            ProductName: productName,
-            BuyerId: buyerId,
-            BuyerUsername: buyerUsername,
-            SellerId: sellerId,
-            SellerUsername: sellerUsername,
-            ProductAmount: productAmount,
-            ProductPrice: productPrice,
-            TransactionType: transactionType,
-            TransactionIdDatabase: transactionIdDatabase,
-            DateCreated: dateCreated
+            ProofPointId: proofPointId,
+            Products: products,
+            Evidences: evidences,
+            UserId: userId,
+            Username: username,
+            SubmissionTypeId: submissionTypeId,
+            CreatedAt: createdAt,
         };
         //we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
@@ -106,7 +89,8 @@ class AssetTransfer extends Contract {
     }
 
     // UpdateAsset updates an existing asset in the world state with provided parameters.
-    async UpdateAsset(ctx, id, productId, productName, buyerId, buyerUsername, sellerId, sellerUsername, productAmount, productPrice,transactionType, transactionIdDatabase, dateCreated) {
+
+    async UpdateAsset(ctx, id,proofPointId, products, evidences, userId, username, submissionTypeId, createdAt) {
         const exists = await this.AssetExists(ctx, id);
         if (!exists) {
             throw new Error(`The asset ${id} does not exist`);
@@ -115,17 +99,13 @@ class AssetTransfer extends Contract {
         // overwriting original asset with new asset
         const updatedAsset = {
             ID: id,
-            ProductId: productId,
-            ProductName: productName,
-            BuyerId: buyerId,
-            BuyerUsername: buyerUsername,
-            SellerId: sellerId,
-            SellerUsername: sellerUsername,
-            ProductAmount: productName,
-            ProductPrice: productAmount,
-            TransactionType:transactionType,
-            TransactionIdDatabase: transactionIdDatabase,
-            DateCreated: dateCreated
+            ProofPointId: proofPointId,
+            Products: products,
+            Evidences: evidences,
+            UserId: userId,
+            Username: username,
+            SubmissionTypeId: submissionTypeId,
+            CreatedAt: createdAt,
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         return ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
@@ -147,12 +127,12 @@ class AssetTransfer extends Contract {
     }
 
     // TransferAsset updates the owner field of asset with given id in the world state.
-    async TransferAsset(ctx, id, newOwner, sellerUsername) {
+    async TransferAsset(ctx, id, UserId, Username) {
         const assetString = await this.ReadAsset(ctx, id);
         const asset = JSON.parse(assetString);
-        const oldOwner = asset.SellerId;
-        asset.SellerId = newOwner;
-        asset.SellerUsername = sellerUsername;
+        const oldOwner = asset.UserId;
+        asset.UserId = UserId;
+        asset.Username = Username;
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
         return oldOwner;
